@@ -637,6 +637,7 @@ function addNote(data) {
   el.style.minHeight='unset';
   el.dataset.ox=rawX; el.dataset.oy=rawY;
   el.dataset.ow=rawW; el.dataset.oh=rawH;
+  el.dataset.colorId=colorId;
   el.style.background=bg;
   const dots=NOTE_COLORS.map(c=>`<div class="nc-dot ${c.id===colorId?'on':''}" style="background:${c.bg}" title="${c.label}" onclick="changeNoteColor('${id}','${c.id}',this)"></div>`).join('');
   el.innerHTML=`
@@ -681,6 +682,7 @@ function changeNoteFont(id,delta){
 function changeNoteColor(noteId,colorId,dotEl){
   const el=document.getElementById(noteId); if(!el)return;
   el.style.background=getColorBg(colorId);
+  el.dataset.colorId=colorId;
   el.querySelectorAll('.nc-dot').forEach(d=>d.classList.remove('on'));
   dotEl.classList.add('on'); saveAll();
 }
@@ -1018,7 +1020,7 @@ function collectAll(){
     y:parseFloat(el.dataset.oy)||0,
     w:parseFloat(el.dataset.ow)||220,
     h:parseFloat(el.dataset.oh)||180,
-    color:NOTE_COLORS.find(c=>getColorBg(c.id)===el.style.background)?.id||'yellow',
+    color:el.dataset.colorId||'yellow',
     title:el.querySelector('.postit-title')?.value||'',
     body:el.querySelector('.postit-note')?.innerHTML||'',
     fontSize:parseInt(el.querySelector('.postit-note')?.style.fontSize)||12,
